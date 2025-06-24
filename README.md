@@ -55,6 +55,6 @@ SerendipSpices is a full‑stack MERN web application that brings the authentic 
 
 ## Deployment
 
-* **Backend**: Deploy to Heroku, Railway, or DigitalOcean App Platform
+* **Backend**: Deploy to Heroku or Railway App Platform
 * **Frontend**: Deploy to Vercel or Netlify
 * **Database**: Hosted on MongoDB Atlas
