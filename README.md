@@ -33,6 +33,8 @@ SerendipSpices is a full‑stack MERN web application that brings the authentic 
    ```bash
    cd backend
    npm install
+
+   npm i express mongoose dotenv
    ```
 3. **Frontend setup**
 
