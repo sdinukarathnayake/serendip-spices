@@ -4,9 +4,7 @@ const{createProduct, viewAllProucts,viewProuct,updateProduct,deleteProduct} = re
 
 router.post('/', createProduct);
 router.get('/', viewAllProucts);
-router.get('/id/:userId', viewProuct);
-router.get('/type/:type', viewProuct);
-router.put('/id/:userId', updateProduct);
-router.delete('/id/:userId', deleteProduct);
-
+router.get('/id/:productId', viewProuct);
+router.put('/id/:productId', updateProduct);
+router.delete('/id/:productId', deleteProduct);
 module.exports = router;
