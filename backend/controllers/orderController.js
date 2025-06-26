@@ -47,7 +47,7 @@ const viewOrder = async(req, res) => {
 const updateOrder = async(req,res) =>{
     try{
         const {orderId} =req.params;
-        const {orderId, productId, sellerId, buyerId, soldPrice, quantity, total, deliveryAddressLine1, deliveryAddressLine2, deliveryCity, contactNumber, orderDate, orderTime, orderStatus} = req.body;
+        const { productId, sellerId, buyerId, soldPrice, quantity, total, deliveryAddressLine1, deliveryAddressLine2, deliveryCity, contactNumber, orderDate, orderTime, orderStatus} = req.body;
     
         const order = await Order.findOne({orderId});
 
