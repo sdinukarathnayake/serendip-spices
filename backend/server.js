@@ -11,6 +11,8 @@ const port = process.env.PORT;
 
 // routes files
 const userRoutes = require('./routes/userRoutes');
+const productRoute = require('./routes/productRoute');
+const orderRoute = require('./routes/orderRoute');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -21,6 +23,8 @@ async function start() {
     console.log('MongoDB connected');
 
     app.use('/users', userRoutes);
+    app.use('/products',productRoute);
+     app.use('/orders',orderRoute);
 
     app.listen(port, () =>
         console.log(`Server running on http://localhost:${port}`)
