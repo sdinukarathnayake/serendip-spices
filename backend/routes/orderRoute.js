@@ -7,3 +7,5 @@ router.get('/', viewAllOrders);
 router.get('/id/:orderId', viewOrder);
 router.put('/id/:orderId', updateOrder);
 router.delete('/id/:orderId', deleteOrder);
+
+module.exports = router;

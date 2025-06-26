@@ -1,4 +1,4 @@
-const Product = require('../modules/userModel');
+const Product = require('../modules/productModel');
 
 const createProduct = async (req,res) =>{
 
@@ -6,7 +6,7 @@ const createProduct = async (req,res) =>{
          const{productId, productName, pricePerKg, sellerId, sellerName, description, origin, catalogue} = req.body;
 
         if(!productId || !productName|| !pricePerKg|| !sellerId|| !sellerName|| !description|| !origin|| !catalogue){
-            res.status(400).json({message: "Missing required fields."});
+           return  res.status(400).json({message: "Missing required fields."});
         };
 
         const newProduct = new Product ({productId, productName, pricePerKg, sellerId, sellerName, description, origin, catalogue});
@@ -19,7 +19,7 @@ res.status(500) .json({message : "Failed to create product"});
     }
 };
 
-const viewAllProucts = async (req, res) => {
+const viewAllProducts = async (req, res) => {
     try{
         const products = await Product.find();
         res.status(200).json(products);
@@ -29,12 +29,12 @@ const viewAllProucts = async (req, res) => {
     }
 };
 
-const viewProuct = async (req, res) => {
+const viewProduct = async (req, res) => {
     try{
         const {productId} = req.params;
         const product = await Product.findOne({productId});
 
-        if (!product) return res.status(404).jsonm({ message :"User not found"});
+        if (!product) return res.status(404).json({ message :"Product not found"});
          res.status(200).json(product);
     }
     catch(err){
@@ -71,11 +71,11 @@ const deleteProduct = async (req, res) => {
     try {
         const {productId} = req.params;
         const product = await product.findOneAndDelete({productId});
-        res.status(200).json({ message: "Product deleted successfully", Product: product });
+        res.status(200).json({ message: "Product deleted successfully", Product: deleteProduct });
     }
     catch (err) {
         res.status(500).json({ message: 'Failed to delete product', error: err.message });
     }
 };
 
-module.exports = {createProduct, viewAllProucts,viewProuct,updateProduct,deleteProduct}
+module.exports = {createProduct, viewAllProducts,viewProduct,updateProduct,deleteProduct}
