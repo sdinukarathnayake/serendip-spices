@@ -21,8 +21,8 @@ res.status(500) .json({message : "Failed to create product"});
 
 const viewAllProucts = async (req, res) => {
     try{
-        const users = await Product.find();
-        res.status(200).json(Products);
+        const products = await Product.find();
+        res.status(200).json(products);
     }
     catch (err) {
         res.status(500) .json({message: "Failed to fetch users"});
@@ -32,7 +32,7 @@ const viewAllProucts = async (req, res) => {
 const viewProuct = async (req, res) => {
     try{
         const {productId} = req.params;
-        const product = await Product.findOne({ProductId});
+        const product = await Product.findOne({productId});
 
         if (!product) return res.status(404).jsonm({ message :"User not found"});
          res.status(200).json(product);
@@ -58,10 +58,10 @@ const updateProduct = await Product.findOneAndUpdate(
     {productId}, {productId, productName, pricePerKg, sellerId, sellerName, description, origin, catalogue}, {new: true}
 );
 
-res.status(200).json ({message:"Product updated successfully", Product: upddateProduct});
+res.status(200).json ({message:"Product updated successfully", Product: updateProduct});
 }
  catch(err){
-    res.status(500).json ({message : " Failed to fetch users by Id", error: err.message});
+    res.status(500).json ({message : " Failed to update product", error: err.message});
  }
 };
 
@@ -69,7 +69,7 @@ res.status(200).json ({message:"Product updated successfully", Product: upddateP
 const deleteProduct = async (req, res) => {
     try {
         const {productId} = req.params;
-        const user = await User.findOneAndDelete({productId});
+        const product = await product.findOneAndDelete({productId});
         res.status(200).json({ message: "Product deleted successfully", Product: product });
     }
     catch (err) {
