@@ -18,7 +18,6 @@ const createProduct = async (req, res) => {
         const newProduct = new Product({ productId, productName, pricePerKg, sellerId, sellerName, description, origin, catalogue,image: req.file.filename });
         await newProduct.save();
         res.status(201).json({ message: "New product created successfully", Product: newProduct });
-
     }
     catch (err) {
         res.status(500).json({ message: "Failed to create product" });
@@ -58,7 +57,6 @@ const updateProduct = async (req, res) => {
 
         const product = await Product.findOne({ productId });
 
-
         if (!product) {
             return res.status(404).json({ message: "Product not found" });
         };
@@ -72,14 +70,12 @@ const updateProduct = async (req, res) => {
             { productId }, { productId, productName, pricePerKg, sellerId, sellerName, description, origin, catalogue }, { new: true }
         );
 
-     
         res.status(200).json({ message: "Product updated successfully", Product: updateProduct });
     }
     catch (err) {
         res.status(500).json({ message: " Failed to update product", error: err.message });
     }
 };
-
 
 const deleteProduct = async (req, res) => {
     try {
