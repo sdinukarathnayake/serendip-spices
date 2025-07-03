@@ -5,11 +5,17 @@ const createProduct = async (req, res) => {
     try {
         const { productId, productName, pricePerKg, sellerId, sellerName, description, origin, catalogue } = req.body;
 
-        if (!productId || !productName || !pricePerKg || !sellerId || !sellerName || !description || !origin || !catalogue) {
+        if  (!productId || !productName || !pricePerKg || !sellerId || !sellerName || !description || !origin || !catalogue) {
             return res.status(400).json({ message: "Missing required fields." });
-        };
+        }
 
-        const newProduct = new Product({ productId, productName, pricePerKg, sellerId, sellerName, description, origin, catalogue });
+            // Check that an image was uploaded
+    if (!req.file) {
+      return res.status(400).json({ message: "Product image is required." });
+    };
+
+
+        const newProduct = new Product({ productId, productName, pricePerKg, sellerId, sellerName, description, origin, catalogue,image: req.file.filename });
         await newProduct.save();
         res.status(201).json({ message: "New product created successfully", Product: newProduct });
 
@@ -57,10 +63,16 @@ const updateProduct = async (req, res) => {
             return res.status(404).json({ message: "Product not found" });
         };
 
+            // If a new image file was uploaded, include it
+    if (req.file) {
+      updates.image = req.file.filename;
+    }
+
         const updateProduct = await Product.findOneAndUpdate(
             { productId }, { productId, productName, pricePerKg, sellerId, sellerName, description, origin, catalogue }, { new: true }
         );
 
+     
         res.status(200).json({ message: "Product updated successfully", Product: updateProduct });
     }
     catch (err) {

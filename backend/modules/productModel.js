@@ -34,7 +34,10 @@ const productSchema = new mongoose.Schema(
         catalogue:{
             type:String,
             required:true
-        }
+        },
+        productImage:{
+             type: String
+             } 
     }
 );
 
