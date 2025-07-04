@@ -1,21 +1,12 @@
 const Cart = require('../modules/cartModel');
 
-// Create or update a user's cart
-const createOrUpdateCart = async (req, res) => {
+// Create user's cart
+const createCart = async (req, res) => {
     try {
-        const { userId, items } = req.body;
+        const { userId, productId, quantity,total,cartTotal} = req.body;
 
-        if (!userId || !Array.isArray(items) || items.length === 0) {
-            return res.status(400).json({ message: "userId and items are required." });
-        }
-
-        // Calculate cart total
-        let cartTotal = 0;
-        for (const item of items) {
-            if (!item.productId || item.quantity == null || item.total == null) {
-                return res.status(400).json({ message: "Each item must have productId, quantity, and total." });
-            }
-            cartTotal += item.total;
+        if (!userId || !productId || quantity || !total || !cartTotal) {
+            return res.status(400).json({ message: "Missing required fields" });
         }
 
         // Check if cart already exists
@@ -26,15 +17,15 @@ const createOrUpdateCart = async (req, res) => {
             cart.items = items;
             cart.cartTotal = cartTotal;
             await cart.save();
+
             return res.status(200).json({ message: "Cart updated successfully", cart });
         } else {
             // Create new cart
             const newCart = new Cart({
-                userId,
-                items,
-                cartTotal
+                userId, productId, quantity, total, cartTotal
             });
             await newCart.save();
+
             return res.status(201).json({ message: "Cart created successfully", cart: newCart });
         }
 
@@ -44,7 +35,6 @@ const createOrUpdateCart = async (req, res) => {
 };
 
 // Get all carts 
-
 const viewAllCarts = async (req, res) => {
     try {
         const carts = await Cart.find();
@@ -55,7 +45,7 @@ const viewAllCarts = async (req, res) => {
 };
 
 // Get a user's cart
-const viewUserCart = async (req, res) => {
+const viewCart = async (req, res) => {
     try {
         const { userId } = req.params;
         const cart = await Cart.findOne({ userId });
@@ -81,6 +71,7 @@ const updateCart = async (req, res) => {
         }
 
         let cartTotal = 0;
+        
         for (const item of items) {
             if (!item.productId || item.quantity == null || item.total == null) {
                 return res.status(400).json({ message: "Each item must have productId, quantity, and total." });
@@ -145,9 +136,9 @@ const removeItemFromCart = async (req, res) => {
 };
 
 module.exports = {
-    createOrUpdateCart,
+    createCart,
     viewAllCarts,
-    viewUserCart,
+    viewCart,
     updateCart,
     deleteCart,
     removeItemFromCart
