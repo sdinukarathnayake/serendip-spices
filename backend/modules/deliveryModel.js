@@ -1,37 +1,29 @@
 const mongoose = require('mongoose');
 
-const productSchema = new mongoose.Schema(
+const deliverySchema = new mongoose.Schema(
     {
-        productId: {
+        userId: {
             type: String,
             required: true,
             unique: true
         },
-        productName: {
+        deliveryAddressLine1: {
             type: String,
             required: true
         },
-        description: {
+        deliveryAddressLine2: {
             type: String,
             required: true
         },
-        pricePerKg: {
-            type: Number,
-            required: true
-        },
-        userId: {
-            type: String,
-            required: true,
-        },
-        origin: {
+        deliveryCity: {
             type: String,
             required: true
         },
-        productImage: {
+        contactNumber: {
             type: String,
             required: true
         }
     }
 );
 
-module.exports = mongoose.model("Product", productSchema);
+module.exports = mongoose.model("Delivery", deliverySchema);

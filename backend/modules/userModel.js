@@ -15,15 +15,6 @@ const userSchema = new mongoose.Schema(
             type: String,
             required: true
         },
-        phone: {
-            type: String,
-            required: true
-        },
-        username: {
-            type: String,
-            required: true,
-            unique: true
-        },
         password: {
             type: String,
             required: true
@@ -31,10 +22,19 @@ const userSchema = new mongoose.Schema(
         type: {
             type: String,
             required: true,
-            enum: [ 'Buyer', 'Seller', 'Admin' ],
+            enum: ['Buyer', 'Seller', 'Admin'],
             default: 'Buyer'
-        }, 
-        registredDate: {
+        },
+        phone: {
+            type: String,
+            required: true
+        },
+        
+         profilePicture: {
+            type: String,
+            required: true,
+        },
+         registredDate: {
             type: Date,
             default: Date.now
         }

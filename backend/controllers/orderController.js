@@ -1,23 +1,42 @@
 const Order = require('../modules/orderModel');
 
 const createOrder = async (req, res) => {
-
     try {
-        const { orderId, productId, sellerId, buyerId, soldPrice, quantity, total, deliveryAddressLine1, deliveryAddressLine2, deliveryCity, contactNumber, orderStatus } = req.body;
+        const {
+            orderId,
+            userId,
+            items,
+            subTotal,
+            deliveryFee,
+            orderTotal,
+            orderStatus,       // Optional
+            paymentStatus      // Optional
+        } = req.body;
 
-        if (!orderId || !productId || !sellerId || !buyerId || !soldPrice || !quantity || !total || !deliveryAddressLine1 || !deliveryAddressLine2 || !deliveryCity || !contactNumber || !orderStatus) {
-            return res.status(400).json({ message: "Missing required fields." });
-        };
+        // Check required fields only
+        if (!orderId || !userId || !items || !Array.isArray(items) || !subTotal || !deliveryFee || !orderTotal) {
+            return res.status(400).json({ message: "Missing or invalid required fields." });
+        }
 
-        const newOrder = new Order({ orderId, productId, sellerId, buyerId, soldPrice, quantity, total, deliveryAddressLine1, deliveryAddressLine2, deliveryCity, contactNumber, orderStatus });
+        
+        const newOrder = new Order({
+            orderId,
+            userId,
+            items,
+            subTotal,
+            deliveryFee,
+            orderTotal,
+            
+        });
+
         await newOrder.save();
-
         res.status(201).json({ message: "New order created successfully", Order: newOrder });
-    }
-    catch (err) {
+
+    } catch (err) {
         res.status(500).json({ message: "Failed to create order", error: err.message });
     }
 };
+
 
 const viewAllOrders = async (req, res) => {
     try {
@@ -49,24 +68,37 @@ const viewOrder = async (req, res) => {
 const updateOrder = async (req, res) => {
     try {
         const { orderId } = req.params;
-        const { productId, sellerId, buyerId, soldPrice, quantity, total, deliveryAddressLine1, deliveryAddressLine2, deliveryCity, contactNumber, orderStatus } = req.body;
+        const updateData = req.body;
 
-        const order = await Order.findOne({ orderId });
+        // Optional: Validate items if provided
+        if (updateData.items) {
+            if (!Array.isArray(updateData.items)) {
+                return res.status(400).json({ message: "Items must be an array." });
+            }
 
-        if (!order) {
-            return res.status(404).json({ message: "Order not found" });
-        };
+            for (const item of updateData.items) {
+                if (!item.productId || typeof item.quantity !== 'number' || typeof item.itemTotal !== 'number') {
+                    return res.status(400).json({ message: "Each item must have productId, quantity, and itemTotal." });
+                }
+            }
+        }
 
-        const updateOrder = await Order.findOneAndUpdate(
-            { orderId }, { orderId, productId, sellerId, buyerId, soldPrice, quantity, total, deliveryAddressLine1, deliveryAddressLine2, deliveryCity, contactNumber, orderStatus }, { new: true }
+        const updatedOrder = await Order.findOneAndUpdate(
+            { orderId },
+            updateData,
+            { new: true }
         );
 
-        res.status(200).json({ message: "Order updated successfully", Order: updateOrder });
-    }
-    catch (err) {
+        if (!updatedOrder) {
+            return res.status(404).json({ message: "Order not found" });
+        }
+
+        res.status(200).json({ message: "Order updated successfully", Order: updatedOrder });
+    } catch (err) {
         res.status(500).json({ message: "Failed to update order", error: err.message });
     }
 };
+
 
 const deleteOrder = async (req, res) => {
     try {
