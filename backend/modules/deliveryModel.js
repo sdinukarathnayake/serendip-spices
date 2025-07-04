@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
 
 const deliverySchema = new mongoose.Schema(
-    {   
+    {
         userId: {
             type: String,
             required: true,
             unique: true
         },
-         deliveryAddressLine1: {
+        deliveryAddressLine1: {
             type: String,
             required: true
         },

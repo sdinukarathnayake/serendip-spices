@@ -7,40 +7,61 @@ const orderSchema = new mongoose.Schema(
             required: true,
             unique: true
         },
-        productId: {
+
+        userId: {
             type: String,
             required: true
         },
-        sellerId: {
-            type: String,
-            required: true
-        },
-        buyerId: {
-            type: String,
-            required: true
-        },
-        soldPrice: {
+
+        items: [
+            {
+                productId: {
+                    type: String,
+                    required: true
+                },
+                quantity: {
+                    type: Number,
+                    required: true
+                },
+                itemTotal: {
+                    type: Number,
+                    required: true
+                }
+            }
+        ],
+
+        subTotal: {
             type: Number,
             required: true
         },
-        quantity: {
+
+        deliveryFee: {
             type: Number,
             required: true
         },
-        total: {
+
+        orderTotal: {
             type: Number,
             required: true
         },
-       
+
         orderDate: {
             type: Date,
             default: Date.now
         },
+
         orderStatus: {
             type: String,
             required: true,
             enum: ['Processing', 'Shipped', 'Delivered', 'Cancelled'],
             default: 'Processing'
+        },
+
+        paymentStatus: {
+            type: String,
+            required: true,
+            enum: ['Pending', 'Paid', 'Cancelled'],
+            default: 'Pending'
         }
     }
 );
