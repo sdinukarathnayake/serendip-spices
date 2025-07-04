@@ -31,22 +31,7 @@ const orderSchema = new mongoose.Schema(
             type: Number,
             required: true
         },
-        deliveryAddressLine1: {
-            type: String,
-            required: true
-        },
-        deliveryAddressLine2: {
-            type: String,
-            required: true
-        },
-        deliveryCity: {
-            type: String,
-            required: true
-        },
-        contactNumber: {
-            type: String,
-            required: true
-        },
+       
         orderDate: {
             type: Date,
             default: Date.now
