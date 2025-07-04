@@ -1,7 +1,7 @@
 const Order = require('../modules/orderModel');
 
-// Create a new order
 const createOrder = async (req, res) => {
+
     try {
         const {
             orderId,
@@ -14,122 +14,78 @@ const createOrder = async (req, res) => {
             paymentStatus      // Optional, default is 'Pending'
         } = req.body;
 
-        // Basic validation
-        if (!orderId || !userId || !Array.isArray(items) || items.length === 0 || subTotal == null || deliveryFee == null || orderTotal == null) {
+        if (!orderId || !userId || !items || !subTotal || !deliveryFee || !orderTotal || !orderStatus || !paymentStatus) {
             return res.status(400).json({ message: "Missing required fields." });
-        }
+        };
 
-        // Validate each item
-        for (let item of items) {
-            if (!item.productId || item.quantity == null || item.itemTotal == null) {
-                return res.status(400).json({ message: "Each item must have productId, quantity, and itemTotal." });
-            }
-        }
-
-        const newOrder = new Order({
-            orderId,
-            userId,
-            items,
-            subTotal,
-            deliveryFee,
-            orderTotal,
-            orderStatus,    // Optional - will default
-            paymentStatus   // Optional - will default
-        });
-
+        const newOrder = new Order({ orderId,userId,items,subTotal,deliveryFee,orderTotal,orderStatus, paymentStatus});
         await newOrder.save();
-        res.status(201).json({ message: "New order created successfully", order: newOrder });
 
-    } catch (err) {
+        res.status(201).json({ message: "New order created successfully", Order: newOrder });
+    }
+    catch (err) {
         res.status(500).json({ message: "Failed to create order", error: err.message });
     }
 };
 
-// View all orders
 const viewAllOrders = async (req, res) => {
     try {
         const orders = await Order.find();
         res.status(200).json(orders);
-    } catch (err) {
-        res.status(500).json({ message: "Failed to fetch orders", error: err.message });
+    }
+    catch (err) {
+        res.status(500).json({ message: "Failed to fetch orders" });
     }
 };
 
-// View a specific order
 const viewOrder = async (req, res) => {
     try {
         const { orderId } = req.params;
         const order = await Order.findOne({ orderId });
-
         if (!order) return res.status(404).json({ message: "Order not found" });
-
         res.status(200).json(order);
-    } catch (err) {
-        res.status(400).json({ message: "Invalid order ID", error: err.message });
+    }
+
+    catch (err) {
+        res.status(400).json({
+            message: "Invalid order ID",
+            error: err.message
+        });
+        res.status
     }
 };
 
-// Update an existing order
 const updateOrder = async (req, res) => {
     try {
         const { orderId } = req.params;
-        const {
-            userId,
-            items,
-            subTotal,
-            deliveryFee,
-            orderTotal,
-            orderStatus,
-            paymentStatus
-        } = req.body;
+        const {userId,items,subTotal,deliveryFee,orderTotal,orderStatus, paymentStatus } = req.body;
 
         const order = await Order.findOne({ orderId });
+
         if (!order) {
             return res.status(404).json({ message: "Order not found" });
-        }
-
-        const updateData = {
-            userId,
-            items,
-            subTotal,
-            deliveryFee,
-            orderTotal,
-            orderStatus,
-            paymentStatus
         };
 
-        const updatedOrder = await Order.findOneAndUpdate(
-            { orderId },
-            updateData,
-            { new: true }
+        const updateOrder = await Order.findOneAndUpdate(
+            { orderId }, { orderId,userId,items,subTotal,deliveryFee,orderTotal,orderStatus, paymentStatus}, { new: true }
         );
 
-        res.status(200).json({ message: "Order updated successfully", order: updatedOrder });
-    } catch (err) {
+        res.status(200).json({ message: "Order updated successfully", Order: updateOrder });
+    }
+    catch (err) {
         res.status(500).json({ message: "Failed to update order", error: err.message });
     }
 };
 
-// Delete an order
 const deleteOrder = async (req, res) => {
     try {
         const { orderId } = req.params;
-        const deletedOrder = await Order.findOneAndDelete({ orderId });
-
-        if (!deletedOrder) {
-            return res.status(404).json({ message: "Order not found" });
-        }
-
-        res.status(200).json({ message: "Order deleted successfully", order: deletedOrder });
-    } catch (err) {
+        const order = await Order.findOneAndDelete({ orderId });
+        res.status(200).json({ message: "Order deleted successfully", Order: order });
+    }
+    catch (err) {
         res.status(500).json({ message: "Failed to delete order", error: err.message });
     }
 };
 
-module.exports = {
-    createOrder,
-    viewAllOrders,
-    viewOrder,
-    updateOrder,
-    deleteOrder
-};
+module.exports = { createOrder, viewAllOrders, viewOrder, updateOrder, deleteOrder };
