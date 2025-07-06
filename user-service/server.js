@@ -16,7 +16,6 @@ app.use(cors());
 
 app.use('/users', userRoutes);
 
-
 async function start() {
     try {
         await sequelize.authenticate();
