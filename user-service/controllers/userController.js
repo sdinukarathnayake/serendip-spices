@@ -1,8 +1,14 @@
 const User = require('../models/User');
 
+const bcrypt = require("bcrypt");
+const SALT_ROUNDS = 10;
+
 exports.createUser = async (req, res) => {
   try {
     const { name, email, phone, username, password, type } = req.body;
+
+    const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+
     const user = await User.create({ name, email, phone, username, password, type });
     res.status(201).json({ message: 'User created', user });
   } catch (err) {
@@ -31,13 +37,17 @@ exports.viewUser = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
   try {
+    if (req.body.password) {
+      req.body.password = await bcrypt.hash(req.body.password, SALT_ROUNDS);
+    }
+
     const [rowsAffected, [updatedUser]] = await User.update(req.body, {
       where: { userId: req.params.userId },
       returning: true
     });
-    if (!rowsAffected) {
-      return res.status(404).json({ message: 'User not found' });
-    }
+
+    if (!rowsAffected) return res.status(404).json({ message: "User not found" });
+  
     res.json({ message: 'User updated', user: updatedUser });
     
   } catch (err) {
