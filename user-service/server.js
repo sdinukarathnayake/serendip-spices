@@ -18,8 +18,9 @@ app.use('/users', userRoutes);
 
 async function start() {
     try {
-        await sequelize.authenticate();
-        console.log("Database connected..");
+        await sequelize.authenticate()
+        .then(() => console.log('Database connected!'))
+        .catch(err => console.error('Unable to connect:', err));
 
         await sequelize.sync();
 
