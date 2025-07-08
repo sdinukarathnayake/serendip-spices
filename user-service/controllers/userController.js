@@ -10,8 +10,8 @@ exports.createUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
     const user = await User.create({ name, email, phone, username, password: hashedPassword, type });
-    const { hashedPassword, ...safeUser } = user.toJSON();
-    res.status(201).json({ message: 'User created', user: safeUser });
+    res.status(201).json({ message: 'User created', user });
+    
   } catch (err) {
     res.status(500).json({ message: 'Error creating user', error: err.message });
   }
