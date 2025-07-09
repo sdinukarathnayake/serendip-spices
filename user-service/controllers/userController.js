@@ -1,7 +1,51 @@
 const User = require('../models/User');
 
+const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+
 const SALT_ROUNDS = 10;
+
+exports.loginUser = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    // Find user by username
+    const user = await User.findOne({ where: { username } });
+    if (!user) return res.status(401).json({ message: "Invalid username or password" });
+
+    // Compare password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(401).json({ message: "Invalid username or password" });
+
+    // Create JWT token
+    const token = jwt.sign(
+      {
+        userId: user.userId,
+        name: user.name,
+        username: user.username,
+        type: user.type
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    // Respond with token and user info (omit password)
+    res.json({
+      message: "Login successful",
+      token,
+      user: {
+        userId: user.userId,
+        name: user.name,
+        email: user.email,
+        username: user.username,
+        type: user.type
+      }
+    });
+
+  } catch (err) {
+    res.status(500).json({ message: "Login failed", error: err.message });
+  }
+};
 
 exports.createUser = async (req, res) => {
   try {

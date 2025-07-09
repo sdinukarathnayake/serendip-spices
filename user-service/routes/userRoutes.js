@@ -1,10 +1,11 @@
 const express = require('express');
 const {
-  createUser, viewAllUsers, viewUser, updateUser, deleteUser
+  createUser, viewAllUsers, viewUser, updateUser, deleteUser, loginUser
 } = require('../controllers/userController');
 
 const router = express.Router();
 
+router.post('/login', loginUser);
 router.post('/', createUser);
 router.get('/', viewAllUsers);
 router.get('/:userId', viewUser);
