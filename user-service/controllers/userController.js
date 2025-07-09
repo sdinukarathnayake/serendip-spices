@@ -64,21 +64,34 @@ exports.createUser = async (req, res) => {
 exports.viewAllUsers = async (_req, res) => {
   try {
     const users = await User.findAll();
-    res.json(users);
+
+    const safeUsers = users.map(user => {
+      const { password, ...rest } = user.toJSON();
+      return rest;
+    });
+
+    res.json(safeUsers);
   } catch (err) {
     res.status(500).json({ message: 'Error fetching users', error: err.message });
   }
 };
 
+
 exports.viewUser = async (req, res) => {
   try {
     const user = await User.findByPk(req.params.userId);
+
     if (!user) return res.status(404).json({ message: 'User not found' });
-    res.json(user);
+
+    const { password, ...safeUser } = user.toJSON();
+    res.json(safeUser);
+    
   } catch (err) {
     res.status(400).json({ message: 'Invalid ID', error: err.message });
   }
 };
+
+
 
 exports.updateUser = async (req, res) => {
   try {
