@@ -17,7 +17,7 @@ export default function Login() {
             const { data } = await apiClient.post('/login', { username, password });
 
             const { user, token } = data;
-            localStorage.setItem("token", token);
+            localStorage.setItem("token-ss", token);
 
             // redirect based on role
             if (user.type === "Buyer") navigate("/dashboard/buyer");
