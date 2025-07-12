@@ -4,9 +4,16 @@ export default function SellerDashboard() {
     
     const navigate = useNavigate();
 
+    const token = localStorage.getItem("token-ss");
+
+    if (!token) {
+        navigate("/login", { replace: true });
+        return null;
+    }
+
     const handleLogout = () => {
-        localStorage.removeItem("token");
-        navigate("/login");
+        localStorage.removeItem("token-ss");
+        navigate("/login", { replace: true });
     };
 
     return (
