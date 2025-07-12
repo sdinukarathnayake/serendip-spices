@@ -7,7 +7,7 @@ export default function SellerDashboard() {
     const token = localStorage.getItem("token-ss");
 
     if (!token) {
-        window.location.replace("/login");
+        navigate("/login", { replace: true });
         return null;
     }
 
