@@ -77,6 +77,30 @@ exports.viewAllUsers = async (_req, res) => {
 };
 
 
+exports.viewUsersByType = async (req, res) => {
+  const { type } = req.params;
+
+  try {
+    const users = await User.findAll({
+      where: { type }
+    });
+
+    if (users.length === 0) {
+      return res
+        .status(404)
+        .json({ message: `No users found for ${sellerId} category` });
+    }
+
+    res.json(users);
+
+  } catch (err) {
+    res
+      .status(400)
+      .json({ message: 'Invalid user type or database error', error: err.message });
+  }
+};
+
+
 exports.viewUser = async (req, res) => {
   try {
     const user = await User.findByPk(req.params.userId);

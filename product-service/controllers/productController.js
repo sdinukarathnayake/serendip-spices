@@ -2,9 +2,9 @@ const Product = require('../models/Product');
 
 exports.addProduct = async (req, res) => {
   try {
-    const { itemname, priceperkg } = req.body;
+    const { itemname, priceperkg, sellerId } = req.body;
 
-    const product = await Product.create({ itemname, priceperkg });
+    const product = await Product.create({ itemname, priceperkg, sellerId });
     res.status(201).json({ message: 'Product Added..', product });
     
   } catch (err) {

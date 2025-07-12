@@ -5,7 +5,7 @@ const verifyToken = require('../middlewares/verifyToken');
 
 const router = express.Router();
 
-router.post('/', addProduct);
+router.post('/',verifyToken, addProduct);
 router.get('/', verifyToken, viewAllProducts);
 router.get('/products/:sellerId', verifyToken, viewProductsBySeller);
 router.get('/:productId', verifyToken, viewProduct);
