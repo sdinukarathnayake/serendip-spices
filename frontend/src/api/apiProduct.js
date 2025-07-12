@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_FOR_CLIENT_URL,
+  baseURL: import.meta.env.VITE_API_BASE_FOR_PRODUCT_URL,
   headers: { 'Content-Type': 'application/json' },
 })
 

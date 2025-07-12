@@ -1,24 +1,27 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import apiClient from '../../api/apiClient'
+import apiClient, { TOKEN_KEY } from '../../api/apiClient'
+import { LoadingButton } from '../common/LoadingButton'
 
-export default function Login() {
+export default function UserLogin() {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
+        setError("");
 
         try {
             const { data } = await apiClient.post('/login', { username, password });
 
             const { user, token } = data;
-            localStorage.setItem("token-ss", token);
+            localStorage.setItem(TOKEN_KEY, token);
 
             // redirect based on role
             if (user.type === "Buyer") navigate("/dashboard/buyer");
@@ -27,6 +30,8 @@ export default function Login() {
         
         } catch (err) {
             setError(err.response?.data?.message || "Login failed");
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -45,6 +50,7 @@ export default function Login() {
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     required
+                    disabled={isLoading}
                 />
 
                 <label className="block mb-2">Password</label>
@@ -54,14 +60,17 @@ export default function Login() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    disabled={isLoading}
                 />
 
-                <button
+                <LoadingButton
                     type="submit"
+                    isLoading={isLoading}
+                    loadingText="Logging in..."
                     className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
                 >
                     Login
-                </button>
+                </LoadingButton>
             </form>
         </div>
     );
