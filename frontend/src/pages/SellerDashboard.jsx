@@ -13,7 +13,7 @@ export default function SellerDashboard() {
 
     const handleLogout = () => {
         localStorage.removeItem("token-ss");
-        navigate("/login");
+        navigate("/login", { replace: true });
     };
 
     return (
