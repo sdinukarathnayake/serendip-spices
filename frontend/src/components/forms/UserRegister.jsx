@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import apiClient from '../../api/apiClient'
+import { LoadingButton } from '../common/LoadingButton'
 
 export default function UserRegister() {
 
@@ -14,6 +15,7 @@ export default function UserRegister() {
     });
 
     const [error, setError] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
     const navigate = useNavigate();
 
@@ -23,11 +25,17 @@ export default function UserRegister() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
+        setError("");
+
         try {
             await apiClient.post('/', form);
             navigate("/login");
+
         } catch (err) {
             setError(err.response?.data?.message || "Registration failed");
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -54,6 +62,7 @@ export default function UserRegister() {
                                 onChange={handleChange}
                                 className="w-full p-2 border rounded"
                                 required
+                                disabled={isLoading}
                             />
                         </div>
                     )
@@ -65,6 +74,7 @@ export default function UserRegister() {
                         name="type"
                         onChange={handleChange}
                         className="w-full p-2 border rounded"
+                        disabled={isLoading}
                     >
                         <option>Buyer</option>
                         <option>Seller</option>
@@ -72,12 +82,14 @@ export default function UserRegister() {
                     </select>
                 </div>
 
-                <button
+                <LoadingButton
                     type="submit"
+                    isLoading={isLoading}
+                    loadingText="Registering..."
                     className="w-full bg-green-600 text-white p-2 rounded hover:bg-green-700"
                 >
                     Register
-                </button>
+                </LoadingButton>    
             </form>
         </div>
     );
