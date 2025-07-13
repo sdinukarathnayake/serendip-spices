@@ -1,20 +1,16 @@
-# 1. Builder stage
-FROM node:18-alpine AS builder
+FROM node:20.17.0
+
+# Set working directory
 WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm ci
+
+# Copy package files and install dependencies
+COPY package.json .
+RUN npm install
+
+# Copy the rest of the files
 COPY . .
-RUN npm run build
 
-# 2. Nginx stage
-FROM nginx:stable-alpine
-
-# remove default nginx content
-RUN rm -rf /usr/share/nginx/html/*
-
-# copy built assets
-COPY --from=builder /app/dist /usr/share/nginx/html
-
-
+# Expose the port your app runs on
 EXPOSE 5173
-CMD ["nginx", "-g", "daemon off;"]
+
+CMD ["npm", "run", "dev"]

@@ -1,19 +1,16 @@
-# 1. Build stage (install deps)
-FROM node:18-alpine AS deps
-WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm ci --production
+FROM node:20.17.0
 
-# 2. Runtime stage
-FROM node:18-alpine
+# Set working directory
 WORKDIR /app
 
-# copy only production node_modules
-COPY --from=deps /app/node_modules ./node_modules
+# Copy package files and install dependencies
+COPY package.json .
+RUN npm install
+
+# Copy the rest of the files
 COPY . .
 
-# expose the port your app listens on
+# Expose the port your app runs on
 EXPOSE 4301
 
-# default start command
-CMD ["node", "server.js"]
+CMD ["npm", "start"]
