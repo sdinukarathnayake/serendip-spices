@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    env_file:
+      - ./user-service/.env
+    ports:
+      - "4301:4301"
+    networks:
+      - spices-net
+
+  product-service:
+    build:
+      context: ./product-service
+      dockerfile: Dockerfile
+    env_file:
+      - ./product-service/.env
+    ports:
+      - "4302:4302"
+    networks:
+      - spices-net
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    env_file:
+      - ./frontend/.env
+    ports:
+      - "5173:5173"
+    depends_on:
+      - user-service
+      - product-service
+    networks:
+      - spices-net
+
+networks:
+  spices-net:
+    driver: bridge
